@@ -1,3 +1,4 @@
+import CustomWordCloud from '@/components/ui/CustomWordCloud'
 import { Card, CardHeader, CardTitle, CardDescription,CardContent} from '@/components/ui/card'
 import React from 'react'
 type Props={}
@@ -10,7 +11,7 @@ const HotTopicsCard=(props:Props)=>{
                     Click on a topic to start a quiz on it!
                 </CardDescription>
             </CardHeader>
-            <CardContent className='pl-2'>word cloud</CardContent>
+            <CardContent className='pl-2'><CustomWordCloud/></CardContent>
         </Card>
     )
 }
