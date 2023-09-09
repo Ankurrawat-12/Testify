@@ -33,7 +33,7 @@ const UserAccountNav = ({ user }: Props) => {
                             <p className="font-medium">{user.name}</p>
                         )}
                         {user.email && (
-                            <p className="w-[200px truncate text-sm text-zinc-700">
+                            <p className="w-[200px] truncate text-sm text-zinc-700">
                                 {user.email}
                             </p>
                         )}
