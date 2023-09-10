@@ -14,7 +14,7 @@ export default async function Home() {
       <Card className='w-[300px]'>
         <CardHeader>
           <CardTitle>Welcome to Testify! :)</CardTitle>
-          <CardDescription>Testify is a platform for students to revise topics using the Ai generated Tests/Quizzes. Get Started by Login in below!!</CardDescription>
+          <CardDescription>Testify is a platform for students to revise topics using the Ai generated Tests/Quizzes. Get Started by Logging in below!!</CardDescription>
         </CardHeader>
         <CardContent>
           <SignInButton text="Sign In With Google"/>
