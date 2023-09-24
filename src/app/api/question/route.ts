@@ -7,6 +7,16 @@ import { ZodError } from "zod";
 export async function POST(req: Request, res: Response) {
   try {
     const session = await getAuthSession();
+    if (!session?.user) {
+      return NextResponse.json(
+        {
+          error: "You must be logged in to create a quiz",
+        },
+        {
+          status: 401,
+        }
+      );
+    }
 
     const body = await req.json();
     const { amount, topic, type } = quizCreationSchema.parse(body);
@@ -15,7 +25,7 @@ export async function POST(req: Request, res: Response) {
     if (type === "open_ended") {
       questions = await strict_output(amount, topic, type);
     } else if (type === "mcq") {
-      questions = await strict_output(amount, topic, type );
+      questions = await strict_output(amount, topic, type);
     }
     return NextResponse.json(
       {
