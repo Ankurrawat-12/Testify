@@ -1,147 +1,112 @@
-import { Configuration, OpenAIApi } from "openai";
+import { BingChat } from "bing-chat";
+import { number } from "zod";
 
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-const openai = new OpenAIApi(configuration);
-
-interface OutputFormat {
-  [key: string]: string | string[] | OutputFormat;
-}
-
+const BING_COOKIE =
+  "ds";
+// const user_prompt = ` generate  random hard ${amount} ${type} question about ${topic} and question should be in  doublequote that differentiate question and option`;
+// const question=system_prompt+output_format_prompt+user_prompt;
 export async function strict_output(
-  system_prompt: string,
-  user_prompt: string | string[],
-  output_format: OutputFormat,
-  default_category: string = "",
-  output_value_only: boolean = false,
-  model: string = "gpt-3.5-turbo",
-  temperature: number = 1,
-  num_tries: number = 3,
-  verbose: boolean = false
-): Promise<
-  {
-    question: string;
-    answer: string;
-  }[]
-> {
-  // if the user input is in a list, we also process the output as a list of json
-  const list_input: boolean = Array.isArray(user_prompt);
-  // if the output format contains dynamic elements of < or >, then add to the prompt to handle dynamic elements
-  const dynamic_elements: boolean = /<.*?>/.test(JSON.stringify(output_format));
-  // if the output format contains list elements of [ or ], then we add to the prompt to handle lists
-  const list_output: boolean = /\[.*?\]/.test(JSON.stringify(output_format));
+  amount: number,
+  topic: String,
+  type: String
+) {
+  const api = new BingChat({
+    cookie: BING_COOKIE, // Use the constant BING_COOKIE here
+  });
+  if (type === "mcq") {
+    const res = await api.sendMessage(
+      `create ${
+        3 * amount
+      } ${type} on ${topic}  all question should 5  word  and all  options  should 8 word and answer should 9 word all of these in new line  `
+    );
+    const inputString: string = res.text;
+    const questionsArray: string[] = inputString.split(/\d+\./).filter(Boolean);
 
-  // start off with no error message
-  let error_msg: string = "";
+    // Define a type for a question
+    type Question = {
+      question: string;
+      choices: string[];
+    };
 
-  for (let i = 0; i < num_tries; i++) {
-    let output_format_prompt: string = `\nYou are to output the following in json format: ${JSON.stringify(
-      output_format
-    )}. \nDo not put quotation marks or escape character \\ in the output fields.`;
+    // Initialize an array to store the extracted questions and choices
+    const extractedQuestions: Question[] = [];
 
-    if (list_output) {
-      output_format_prompt += `\nIf output field is a list, classify output into the best element of the list.`;
-    }
+    // Loop through each question to extract the question and choices
+    questionsArray.forEach((question) => {
+      // Split the question into lines
+      const lines: string[] = question.trim().split("\n");
 
-    // if output_format contains dynamic elements, process it accordingly
-    if (dynamic_elements) {
-      output_format_prompt += `\nAny text enclosed by < and > indicates you must generate content to replace it. Example input: Go to <location>, Example output: Go to the garden\nAny output key containing < and > indicates you must generate the key name to replace it. Example input: {'<location>': 'description of location'}, Example output: {school: a place for education}`;
-    }
+      // Extract the question text (first line)
+      const questionText: string = lines[0].trim();
 
-    // if input is in a list format, ask it to generate json in a list
-    if (list_input) {
-      output_format_prompt += `\nGenerate a list of json, one json for each input element.`;
-    }
+      // Extract the choices (lines starting with letters A, B, C, etc.)
+      const choices: string[] = lines
+        .slice(1)
+        .map((line) => line.trim())
+        .filter(Boolean);
 
-    // Use OpenAI to get a response
-    const response = await openai.createChatCompletion({
-      temperature: temperature,
-      model: model,
-      messages: [
-        {
-          role: "system",
-          content: system_prompt + output_format_prompt + error_msg,
-        },
-        { role: "user", content: user_prompt.toString() },
-      ],
+      // Store the question and choices in an object
+      const questionObj: Question = {
+        question: questionText,
+        choices: choices,
+      };
+
+      // Add the question object to the extractedQuestions array
+      extractedQuestions.push(questionObj);
+    });
+    let refined: any = [];
+    extractedQuestions.forEach((element) => {
+      if (element.choices.length === 4 || element.choices.length === 5) {
+        const question: string = element.question;
+        const answer: string = element.choices[element.choices.length - 2];
+        const option1: string = element.choices[element.choices.length - 1];
+        const option2: string = element.choices[element.choices.length - 3];
+        const option3: string = element.choices[element.choices.length - 4];
+        const object = {
+          question: question,
+          choices: [answer, option1, option2, option3],
+        };
+        refined.push(object);
+      }
     });
 
-    let res: string =
-      response.data.choices[0].message?.content?.replace(/'/g, '"') ?? "";
+    return refined;
+  } else {
+    const data = await api.sendMessage(
+      `create ${amount} ${type} question and answer on ${topic}  all question should 5  word  and  answers and question both should in in new line  `
+    );
+    const inputText = data.text;
 
-    // ensure that we don't replace away apostrophes in text
-    res = res.replace(/(\w)"(\w)/g, "$1'$2");
+    // Split the input text into lines
+    const lines = inputText.split("\n").map((line) => line.trim());
 
-    if (verbose) {
-      console.log(
-        "System prompt:",
-        system_prompt + output_format_prompt + error_msg
-      );
-      console.log("\nUser prompt:", user_prompt);
-      console.log("\nGPT response:", res);
-    }
+    // Initialize an array to store the extracted questions and answers
+    const extractedData = [];
+    let currentPair = { question: "", answer: "" };
 
-    // try-catch block to ensure output format is adhered to
-    try {
-      let output: any = JSON.parse(res);
-
-      if (list_input) {
-        if (!Array.isArray(output)) {
-          throw new Error("Output format not in a list of json");
+    // Loop through each line
+    for (const line of lines) {
+      if (line.match(/^\d+\.\s/)) {
+        // This line starts with a number followed by a period and a space, it's a new question
+        if (currentPair.question !== "") {
+          // If there's an existing question, push it to the extractedData
+          extractedData.push(currentPair);
         }
+        // Start a new question
+        currentPair = { question: line.replace(/^\d+\.\s/, ""), answer: "" };
       } else {
-        output = [output];
+        // This line is part of the answer
+        currentPair.answer += (currentPair.answer === "" ? "" : "\n") + line;
       }
-
-      // check for each element in the output_list, the format is correctly adhered to
-      for (let index = 0; index < output.length; index++) {
-        for (const key in output_format) {
-          // unable to ensure accuracy of dynamic output header, so skip it
-          if (/<.*?>/.test(key)) {
-            continue;
-          }
-
-          // if output field missing, raise an error
-          if (!(key in output[index])) {
-            throw new Error(`${key} not in json output`);
-          }
-
-          // check that one of the choices given for the list of words is an unknown
-          if (Array.isArray(output_format[key])) {
-            const choices = output_format[key] as string[];
-            // ensure output is not a list
-            if (Array.isArray(output[index][key])) {
-              output[index][key] = output[index][key][0];
-            }
-            // output the default category (if any) if GPT is unable to identify the category
-            if (!choices.includes(output[index][key]) && default_category) {
-              output[index][key] = default_category;
-            }
-            // if the output is a description format, get only the label
-            if (output[index][key].includes(":")) {
-              output[index][key] = output[index][key].split(":")[0];
-            }
-          }
-        }
-
-        // if we just want the values for the outputs
-        if (output_value_only) {
-          output[index] = Object.values(output[index]);
-          // just output without the list if there is only one element
-          if (output[index].length === 1) {
-            output[index] = output[index][0];
-          }
-        }
-      }
-
-      return list_input ? output : output[0];
-    } catch (e) {
-      error_msg = `\n\nResult: ${res}\n\nError message: ${e}`;
-      console.log("An exception occurred:", e);
-      console.log("Current invalid json format:", res);
     }
+
+    // Push the last question-answer pair to extractedData
+    extractedData.push(currentPair);
+
+    // Output the extracted questions and answers as an array of objects
+
+    return extractedData;
   }
 
-  return [];
+  // print the full text at the end
 }
