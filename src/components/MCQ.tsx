@@ -1,7 +1,7 @@
 "use client";
 
 import { Game, Question } from "@prisma/client";
-import { BarChart, ChevronRightIcon, Link, Loader2, Timer } from "lucide-react";
+import { BarChart, ChevronRightIcon, Loader2, Timer } from "lucide-react";
 import React from "react";
 import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Button, buttonVariants } from "./ui/button";
@@ -12,6 +12,7 @@ import { checkAnswerSchema } from "@/schemas/form/quiz";
 import { set, z } from "zod";
 import { useToast } from "./ui/use-toast";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 type Props = {
   game: Game & { questions: Pick<Question, "id" | "options" | "question">[] };
@@ -101,7 +102,7 @@ const MCQ = ({ game }: Props) => {
         </div>
         <Link
           href={`/statistics/${game.id}`}
-          className={cn(buttonVariants(), "mt-2")}
+          className={cn(buttonVariants({ size: "lg" }), "mt-2")}
         >
           View Statistics
           <BarChart className="w-4 h-4 ml-2" />
@@ -140,14 +141,14 @@ const MCQ = ({ game }: Props) => {
           </CardTitle>
           <CardDescription className="flex-grow text-lg">
             {/* Who was the king of Ancient Dwarka? */}
-            {currentQuestion.question}
+            {currentQuestion.question || "mcq topic"}
           </CardDescription>
         </CardHeader>
       </Card>
       <div className="flex flex-col items-center justify-center w-full mt-4">
         {options.map((option, index) => {
-            console.log(option);
-            console.log("hello");
+          console.log(option);
+          console.log("hello");
           return (
             <Button
               key={index}

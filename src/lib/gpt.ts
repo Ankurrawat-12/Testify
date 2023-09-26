@@ -2,7 +2,7 @@ import { BingChat } from "bing-chat";
 import { number } from "zod";
 
 const BING_COOKIE =
-  "ds";
+  "cookie";
 // const user_prompt = ` generate  random hard ${amount} ${type} question about ${topic} and question should be in  doublequote that differentiate question and option`;
 // const question=system_prompt+output_format_prompt+user_prompt;
 export async function strict_output(
