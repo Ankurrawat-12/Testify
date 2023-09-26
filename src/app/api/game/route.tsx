@@ -71,7 +71,7 @@ export async function POST(req: Request, res: Response) {
           questionType: "open_ended",
         };
       });
-
+      console.log(manyData);
       await prisma.question.createMany({
         data: manyData,
       });
