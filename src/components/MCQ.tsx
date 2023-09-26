@@ -138,7 +138,7 @@ const MCQ = ({ game }: Props) => {
                     </CardTitle>
                     <CardDescription className="flex-grow text-lg">
                         {/* Who was the king of Ancient Dwarka? */}
-                        {currentQuestion.question}
+                        {/* {currentQuestion.question} */}
                     </CardDescription>
                 </CardHeader>
             </Card>

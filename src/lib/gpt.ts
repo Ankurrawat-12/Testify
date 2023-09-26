@@ -2,7 +2,7 @@ import { BingChat } from "bing-chat";
 import { number } from "zod";
 
 const BING_COOKIE =
-  "Enter you bing cookie stating with _U";
+  "1fy7Pm-v8244ykJ7eW-KXycYxNyZtnQi1o5473o7mUZrozOLqHI4dlLzkpu7EH6FRsIUj0cZV4OXvx649tW3VisVOaye7bV_hC32VPJcrWRsvgmhUbdQ6DwIhOmhPU6cO5xzNo9WVrd6Ne6-4Q8APcpsL3-1R-h8xB_ef7AT4SINg8cuFZMVemAxgK7i5eyt6v6OfXo2uMigayIJoA3HbtBniH318WWwkVLxdcWI74us";
 // const user_prompt = ` generate  random hard ${amount} ${type} question about ${topic} and question should be in  doublequote that differentiate question and option`;
 // const question=system_prompt+output_format_prompt+user_prompt;
 export async function strict_output(
@@ -19,7 +19,6 @@ export async function strict_output(
         3 * amount
       } ${type} on ${topic}  all question should 5  word  and all  options  should 8 word and answer should 9 word all of these in new line  `
     );
-    console.log(amount);
     const inputString: string = res.text;
     const questionsArray: string[] = inputString.split(/\d+\./).filter(Boolean);
 
@@ -59,13 +58,13 @@ export async function strict_output(
     extractedQuestions.forEach((element) => {
       if (element.choices.length === 4 || element.choices.length === 5) {
         const question: string = element.question;
-        const option1: string = element.choices[element.choices.length - 2];
-        const option2: string = element.choices[element.choices.length - 1];
-        const option3: string = element.choices[element.choices.length - 3];
-        const option4: string = element.choices[element.choices.length - 4];
+        const answer: string = element.choices[element.choices.length - 2];
+        const option1: string = element.choices[element.choices.length - 1];
+        const option2: string = element.choices[element.choices.length - 3];
+        const option3: string = element.choices[element.choices.length - 4];
         const object = {
           question: question,
-          choices: [option1, option2, option3, option4],
+          choices: [answer,option1, option2, option3],
         };
         refined.push(object);
       }
@@ -105,7 +104,6 @@ export async function strict_output(
     extractedData.push(currentPair);
 
     // Output the extracted questions and answers as an array of objects
-    console.log(extractedData);
 
     return extractedData;
   }
