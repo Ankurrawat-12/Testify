@@ -2,7 +2,7 @@ import { BingChat } from "bing-chat";
 import { number } from "zod";
 
 const BING_COOKIE =
-  "1fy7Pm-v8244ykJ7eW-KXycYxNyZtnQi1o5473o7mUZrozOLqHI4dlLzkpu7EH6FRsIUj0cZV4OXvx649tW3VisVOaye7bV_hC32VPJcrWRsvgmhUbdQ6DwIhOmhPU6cO5xzNo9WVrd6Ne6-4Q8APcpsL3-1R-h8xB_ef7AT4SINg8cuFZMVemAxgK7i5eyt6v6OfXo2uMigayIJoA3HbtBniH318WWwkVLxdcWI74us";
+  "ds";
 // const user_prompt = ` generate  random hard ${amount} ${type} question about ${topic} and question should be in  doublequote that differentiate question and option`;
 // const question=system_prompt+output_format_prompt+user_prompt;
 export async function strict_output(
@@ -64,7 +64,7 @@ export async function strict_output(
         const option3: string = element.choices[element.choices.length - 4];
         const object = {
           question: question,
-          choices: [answer,option1, option2, option3],
+          choices: [answer, option1, option2, option3],
         };
         refined.push(object);
       }
