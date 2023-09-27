@@ -2,7 +2,8 @@ import { BingChat } from "bing-chat";
 import { number } from "zod";
 
 const BING_COOKIE =
-  "1NU7zilDxlwbF68royY7_dNWfgV0G-KZJUz_YTwvpGwjd4i8nB0jYfJkjT7Px65qqoiQPLtXu2jG3eSinoZsEzg0brpMxY7BDCMgRksSi9aoB_RIFMgs1YvEz2-qQ1Fy79wyhCB4qttBMiwaGqi_5qkqGwQMpLari_trxNaqGmB5TJEE7BSxP6tIrR6v1P-eCEKFBOtDBzLbH-jFl4xchW86YFeYxaatP_4lu6XAmg0E";
+  "1ya7oj1DpB0cseBOljg33tlh3eyCJaQBKScm4Vw2m5pL-x8cFkpolPAzCc1YmFqPdtmCtuajGmhyr6hnhQYa19elewfZvE11jxXwNYYjbyVqTw-DMSeMFCmGTpJRaz-QvK8KaEv2-eMOfb_UKsejvnpx-dEUnmHKfRztoMXGyCYiLkp2rSmaH-N3Le-VThhaCNBjBad4vngSsqbDy-PMPNA";
+
 // const user_prompt = ` generate  random hard ${amount} ${type} question about ${topic} and question should be in  doublequote that differentiate question and option`;
 // const question=system_prompt+output_format_prompt+user_prompt;
 export async function strict_output(

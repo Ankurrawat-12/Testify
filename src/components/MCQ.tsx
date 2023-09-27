@@ -62,19 +62,25 @@ const MCQ = ({ game }: Props) => {
             title: "Correct!",
             variant: "success",
           });
-          setCorrectAnswers((prev) => prev + 1);
+          setCorrectAnswers((prev) => {
+            return prev < 9 ? prev + 1 : 10;
+          });
         } else {
           toast({
             title: "Incorrect!",
             variant: "destructive",
           });
-          setWrongAnswers((prev) => prev + 1);
+          setWrongAnswers((prev) => {
+            return prev < 9 ? prev + 1 : 10;
+          });
         }
-        if (questionIndex === game.questions.length - 1) {
+        if (questionIndex === game.questions.length - 1 || questionIndex === 9) {
           setHasEnded(true);
           return;
         }
-        setQuestionIndex((prev) => prev + 1);
+        setQuestionIndex((prev) => {
+          return prev < 9 ? prev + 1 : 10;
+        });
       },
     });
   }, [checkAnswer, toast, isChecking, questionIndex, game.questions.length]);
@@ -148,7 +154,7 @@ const MCQ = ({ game }: Props) => {
           <CardTitle className="mr-5 text-center divide-y divide-zinc-600/50">
             <div>{questionIndex + 1}</div>
             <div className="text-base text-slate-400">
-              {game.questions.length}
+              {game.questions.length > 10 ? 10 : game.questions.length}
             </div>
           </CardTitle>
           {currentQuestion ? (
@@ -158,7 +164,7 @@ const MCQ = ({ game }: Props) => {
               {currentQuestion.question || "mcq topic"}
             </CardDescription>
           ) : (
-            <div>hello</div>
+            <div>The Api Can not Fetch the Quesitons due to heavy traffic Please Upgrade your plan.</div>
           )}
         </CardHeader>
       </Card>
