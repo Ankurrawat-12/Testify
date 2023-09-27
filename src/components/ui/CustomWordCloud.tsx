@@ -5,20 +5,20 @@ import { useTheme } from 'next-themes'
 
 type Props = {}
 const data = [{
-    text: "hey",
+    text: "Naruto",
     value: 3
 }, {
-    text: "hello",
+    text: "One Piece",
     value: 5
 },
 {
-    text: "hee",
+    text: "Jujutsu Kaisen",
     value: 4
 }, {
-    text: "hee",
+    text: "Web Development",
     value: 6
 }, {
-    text: "hee",
+    text: "Hindu",
     value: 9
 }]
 const fontsizeMapper = (word: { value: number }) => {

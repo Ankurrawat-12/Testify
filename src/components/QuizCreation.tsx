@@ -27,12 +27,14 @@ import { Separator } from "@/components/ui/separator";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-
+import LoadingQuestions from  "./LoadingQuestion"
 type Props = {};
 
 type Inputs = z.infer<typeof quizCreationSchema>;
 const QuizCreation = (props: Props) => {
   const router = useRouter();
+  const [showLoader, setShowLoader] = React.useState(false);
+  const [finishedLoading, setFinishedLoading] = React.useState(false);
   const { mutate: getQuestions, isLoading } = useMutation({
     mutationFn: async ({ amount, topic, type }: Inputs) => {
       const response = await axios.post("/api/game", { amount, topic, type });
@@ -49,6 +51,7 @@ const QuizCreation = (props: Props) => {
   });
 
   function onSubmit(input: Inputs) {
+    setShowLoader(true);
     getQuestions(
       {
         amount: input.amount,
@@ -57,6 +60,7 @@ const QuizCreation = (props: Props) => {
       },
       {
         onSuccess: ({ gameId }) => {
+          setShowLoader(false);
           if (form.getValues("type") == "open_ended") {
             router.push(`/play/open-ended/${gameId}`);
           } else {
@@ -68,6 +72,10 @@ const QuizCreation = (props: Props) => {
   }
 
   form.watch();
+  
+  if (showLoader) {
+    return <LoadingQuestions finished={finishedLoading} />;
+  }
   return (
     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
       <Card>
