@@ -15,17 +15,10 @@ const data = [{
     text: "Jujutsu Kaisen",
     value: 4
 }, {
-<<<<<<< HEAD
     text: "Web Development",
     value: 6
 }, {
     text: "Hindu",
-=======
-    text: "Hindu",
-    value: 6
-}, {
-    text: "Web Devleopment",
->>>>>>> 7c6d0a51e982075d01563be4f4881310dbc77e93
     value: 9
 }]
 const fontsizeMapper = (word: { value: number }) => {

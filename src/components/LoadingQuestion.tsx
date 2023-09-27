@@ -19,7 +19,7 @@ const LoadingQuestions = ({ finished }: Props) => {
     const interval = setInterval(() => {
       let randomIndex = Math.floor(Math.random() * loadingTexts.length);
       setLoadingText(loadingTexts[randomIndex]);
-    }, 5000);
+    }, 10000);
     return () => clearInterval(interval);
   }, []);
 

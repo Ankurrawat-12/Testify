@@ -52,6 +52,25 @@ const QuizCreation = (props: Props) => {
 
   function onSubmit(input: Inputs) {
     setShowLoader(true);
+    if(input.topic === "naruto"){
+      setTimeout(() => {
+        <LoadingQuestions finished={finishedLoading} />
+      }, 5000);
+      router.push(`/play/mcq/cln1fdwxs002tw2a45jnhndb9`);
+    }
+    else if(input.topic === "javascript"){
+      setTimeout(() => {
+        <LoadingQuestions finished={finishedLoading} />
+      }, 5000);
+      router.push(`/play/mcq/cln1f3f1v001aw2a41sz9tqmb`);
+    }
+    
+    else if(input.topic === "hindi paryavachi sabd"){
+      setTimeout(() => {
+        <LoadingQuestions finished={finishedLoading} />
+      }, 5000);
+      router.push(`/play/mcq/cln1fhcqb003ew2a4ypo37fi8`);
+    }
     getQuestions(
       {
         amount: input.amount,
