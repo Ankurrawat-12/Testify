@@ -2,7 +2,7 @@ import { BingChat } from "bing-chat";
 import { number } from "zod";
 
 const BING_COOKIE =
-  "1ya7oj1DpB0cseBOljg33tlh3eyCJaQBKScm4Vw2m5pL-x8cFkpolPAzCc1YmFqPdtmCtuajGmhyr6hnhQYa19elewfZvE11jxXwNYYjbyVqTw-DMSeMFCmGTpJRaz-QvK8KaEv2-eMOfb_UKsejvnpx-dEUnmHKfRztoMXGyCYiLkp2rSmaH-N3Le-VThhaCNBjBad4vngSsqbDy-PMPNA";
+  "1CG272MvMcOJgrwaRqO2IFXe3YkYoOE2RVzGTmN3HAr8VVYrYMW6dUmsJ-zj6O1W-UPX7g2m_pjQhapfNViaHFTuz7YRY5xENe-PdRo5SUgizlQVsnyMcDxU0oLQUv9kxJBel0UnfLyR0b-M1dDe6LYM4e7q1RGs-fSeXgCfqkpEv_DnWM-2fxTZS_A07bx6Qge4tuW2voDT7bGehfrPK9g";
 
 // const user_prompt = ` generate  random hard ${amount} ${type} question about ${topic} and question should be in  doublequote that differentiate question and option`;
 // const question=system_prompt+output_format_prompt+user_prompt;
@@ -18,7 +18,7 @@ export async function strict_output(
     const res = await api.sendMessage(
       `create ${
         3 * amount
-      } ${type} on ${topic}  all question should 5  word  and all  options  should 8 word and answer should 9 word all of these in new line  `
+      } ${type} on ${topic}  all question should 5  word  and all  options  should 9 word all of these in new line  `
     );
     const inputString: string = res.text;
     const questionsArray: string[] = inputString.split(/\d+\./).filter(Boolean);

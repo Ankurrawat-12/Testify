@@ -60,11 +60,14 @@ const QuizCreation = (props: Props) => {
       },
       {
         onSuccess: ({ gameId }) => {
-          setShowLoader(false);
           if (form.getValues("type") == "open_ended") {
             router.push(`/play/open-ended/${gameId}`);
+          setShowLoader(false);
+
           } else {
             router.push(`/play/mcq/${gameId}`);
+          setShowLoader(false);
+
           }
         },
       }
